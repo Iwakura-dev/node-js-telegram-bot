@@ -39,7 +39,6 @@ bot.command('settings', async (ctx: Context) => {
   );
 });
 
-
 bot.catch((err) => {
   const ctx = err.ctx;
   console.error(`Error while handling input ${ctx.update.update_id}`);
