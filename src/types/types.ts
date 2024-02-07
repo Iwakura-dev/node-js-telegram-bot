@@ -1,4 +1,4 @@
-interface IVacancy {
+interface IHeadHunterVacancy {
   name: string;
   alternate_url?: string;
   employer: {
@@ -11,5 +11,5 @@ interface IVacancy {
   } | null;
 }
 export interface IVacanciesResponse {
-  items: IVacancy[];
+  items: IHeadHunterVacancy[];
 }

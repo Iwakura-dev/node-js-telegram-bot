@@ -1,36 +1,48 @@
 import 'dotenv/config';
-import { Bot, Context, GrammyError, HttpError, InlineKeyboard } from 'grammy';
-import { sendVacancies } from '../utils/utils';
+import {
+  Bot,
+  Context,
+  GrammyError,
+  HttpError,
+  InlineKeyboard,
+  Keyboard,
+} from 'grammy';
+import { rootKeyboard, vacancyKeyboard } from '../menu/menu';
+// import { sendHHVacancies } from '../utils/utils';
 
 const token = process.env.API_TOKEN_TELEGRAM_BOT ?? '';
 
 const bot = new Bot(token);
+
 let subscriptions: Record<string, string[]> = {};
 let lastRequestTime: Record<string, number> = {};
 
 bot.command('start', async (ctx: Context) => {
-  const inlineKeyboard = new InlineKeyboard()
-    .text('Направление Front-End', 'subscribe_frontend')
-    .text('Направление Back-End', 'subscribe_backend');
   await ctx.reply(
-    'Привет ✋!\nСпасибо что воспользовался данным телеграмм ботом для поиска своей заветной вакансии!\nДанный бот был сделан с иницитивой помощи юным разработчиком, которые горят желанием найти свое первое рабочее место\nЕсли вас интересует автор данного бота, то пропишите на своей клавиатуре команду <b>/author</b>\nПеред началом работы, пожалуйста подпишись на направление которое тебя интересует 👇!',
+    '👋 Привет!\nТы все-таки решился автоматизировать свои потраченные часы?\nТогда скорее выбирай своё направление и следи за вакансиями с сайта <b>HeadHunter.ru</b>',
     {
-      reply_markup: inlineKeyboard,
+      reply_markup: rootKeyboard,
       parse_mode: 'HTML',
     },
   );
 });
 
-bot.command('settings', async (ctx: Context) => {
-  const inlineKeyboard = new InlineKeyboard()
-    .text('Отписаться от Front-End', 'unsubscribe_frontend')
-    .text('Отписаться от Back-End', 'unsubscribe_backend');
-  await ctx.reply(
-    'Данная секция предназначена для отписки от какого либо события!',
-    {
-      reply_markup: inlineKeyboard,
-    },
-  );
+bot.on(':text', async (ctx: Context) => {
+  switch (ctx.msg?.text) {
+    case 'Направление':
+      await ctx.reply(
+        'Выберите из списка направления в котором вы заинтересованы!',
+        {
+          reply_markup: vacancyKeyboard,
+        },
+      );
+      break;
+    case 'Назад':
+      await ctx.reply('Выходим на главное меню', {
+        reply_markup: rootKeyboard,
+      });
+      break;
+  }
 });
 
 bot.catch((err) => {
@@ -45,4 +57,5 @@ bot.catch((err) => {
     console.error('Unknown error', e);
   }
 });
+
 bot.start();

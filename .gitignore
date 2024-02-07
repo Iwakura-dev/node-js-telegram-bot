@@ -1,6 +1,15 @@
 # Node dependencies
 node_modules
+
 # Enviroment Variables
 .env
-# Package dependencies
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 package-lock.json
+
+# macOS-specific files
+.DS_Store

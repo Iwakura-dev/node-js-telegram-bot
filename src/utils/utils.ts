@@ -1,7 +1,7 @@
 import { Bot } from 'grammy';
 import { IVacanciesResponse } from '../types/types';
 
-export async function sendVacancies(
+export async function sendHHVacancies(
   bot: Bot,
   subscriptions: Record<string, string[]>,
 ) {
