@@ -21,12 +21,6 @@ bot.command('start', async (ctx: Context) => {
   );
 });
 
-bot.command('author', async (ctx: Context) => {
-  await ctx.reply(
-    'Об авторе:\nАвтор является таким же юным разработчиком что и большинство.\nКаждый день автор откликался на вакансии на сайтах hh.ru / хабр карьера\nИ по итогу, автору пришла гениальная идея. Идея заключалась в автоматизации данного процесса, т.к у автора хватает навыков для этого дела, автор решил создать данного бота',
-  );
-});
-
 bot.command('settings', async (ctx: Context) => {
   const inlineKeyboard = new InlineKeyboard()
     .text('Отписаться от Front-End', 'unsubscribe_frontend')
