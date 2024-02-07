@@ -1,30 +1,24 @@
 import 'dotenv/config';
-import {
-  Bot,
-  Context,
-  GrammyError,
-  HttpError,
-  InlineKeyboard,
-  Keyboard,
-} from 'grammy';
-import { rootKeyboard, vacancyKeyboard } from '../menu/menu';
+import { Bot, Context, GrammyError, HttpError } from 'grammy';
+import { inlineKeyboardVacancy, rootKeyboard } from '../menu/menu';
+import { author, greeting } from '../constants/text/text';
+import { Commands } from '../menu/commands/commands';
+import { sendHHVacancies } from '../utils/utils';
 // import { sendHHVacancies } from '../utils/utils';
 
 const token = process.env.API_TOKEN_TELEGRAM_BOT ?? '';
 
-const bot = new Bot(token);
+const bot = new Bot<Context>(token);
 
-let subscriptions: Record<string, string[]> = {};
+let userSubscriptions: Record<number, string> = {};
 let lastRequestTime: Record<string, number> = {};
 
 bot.command('start', async (ctx: Context) => {
-  await ctx.reply(
-    '👋 Привет!\nТы все-таки решился автоматизировать свои потраченные часы?\nТогда скорее выбирай своё направление и следи за вакансиями с сайта <b>HeadHunter.ru</b>',
-    {
-      reply_markup: rootKeyboard,
-      parse_mode: 'HTML',
-    },
-  );
+  await ctx.reply(greeting, {
+    reply_markup: rootKeyboard,
+    parse_mode: 'HTML',
+  });
+  Commands(ctx);
 });
 
 bot.on(':text', async (ctx: Context) => {
@@ -33,9 +27,12 @@ bot.on(':text', async (ctx: Context) => {
       await ctx.reply(
         'Выберите из списка направления в котором вы заинтересованы!',
         {
-          reply_markup: vacancyKeyboard,
+          reply_markup: inlineKeyboardVacancy,
         },
       );
+      break;
+    case 'Об авторе':
+      await ctx.reply(author);
       break;
     case 'Назад':
       await ctx.reply('Выходим на главное меню', {
@@ -44,7 +41,6 @@ bot.on(':text', async (ctx: Context) => {
       break;
   }
 });
-
 bot.catch((err) => {
   const ctx = err.ctx;
   console.error(`Error while handling input ${ctx.update.update_id}`);
