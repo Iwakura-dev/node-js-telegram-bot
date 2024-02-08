@@ -11,4 +11,4 @@ export const rootKeyboard = new Keyboard()
 export const inlineKeyboardVacancy = new InlineKeyboard()
   .text('Front-End разработка', 'subscribe_frontend')
   .row()
-  .text('Back-End разработка', 'subscribe_frontend');
+  .text('Back-End разработка', 'subscribe_backend');
