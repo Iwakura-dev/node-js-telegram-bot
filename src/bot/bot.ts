@@ -86,7 +86,7 @@ bot.callbackQuery('subscribe_backend', async (ctx) => {
           lastRequestTime[userId.toString()] = Date.now();
           await sendHHVacancies(ctx, 'Back-End');
         }
-      }, 600000);
+      }, 600000); // 10 minutes
     } else {
       await ctx.answerCallbackQuery({
         text: 'Вы уже подписались на данное событие!',
