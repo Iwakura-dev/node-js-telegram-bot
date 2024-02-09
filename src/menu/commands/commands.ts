@@ -10,5 +10,9 @@ export const Commands = async (ctx: Context) => {
       command: 'settings',
       description: 'Настройки профиля',
     },
+    {
+      command: 'unsubscribe',
+      description: 'Отписаться от направления',
+    },
   ]);
 };
