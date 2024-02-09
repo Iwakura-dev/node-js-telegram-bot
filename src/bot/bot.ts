@@ -40,6 +40,7 @@ bot.command('settings', async (ctx: Context) => {
     }
   }
 });
+
 bot.on(':text', async (ctx: Context) => {
   switch (ctx.msg?.text) {
     case 'Направление':
