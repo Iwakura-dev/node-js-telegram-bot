@@ -19,7 +19,27 @@ bot.command('start', async (ctx: Context) => {
   });
   Commands(ctx);
 });
-
+bot.command('settings', async (ctx: Context) => {
+  if (ctx.from?.id) {
+    const userId = ctx.from?.id;
+    if (userSubscriptions[userId] && userSubscriptions[userId].length > 0) {
+      const userDirection = userSubscriptions[userId].join(', ');
+      await ctx.reply(
+        `Ваш профиль:\n\nВаше выбранное направление: <b>${userDirection}</b>`,
+        {
+          parse_mode: 'HTML',
+        },
+      );
+    } else {
+      await ctx.reply(
+        '<b>Вы не можете просматривать свой профиль, выберите свое направление!</b>',
+        {
+          parse_mode: 'HTML',
+        },
+      );
+    }
+  }
+});
 bot.on(':text', async (ctx: Context) => {
   switch (ctx.msg?.text) {
     case 'Направление':
