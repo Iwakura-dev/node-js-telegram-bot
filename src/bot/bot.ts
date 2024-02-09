@@ -1,6 +1,10 @@
 import 'dotenv/config';
 import { Bot, Context, GrammyError, HttpError } from 'grammy';
-import { inlineKeyboardVacancy, rootKeyboard } from '../menu/menu';
+import {
+  inlineKeyboardVacancy,
+  inlineUnsubscribeKeyboard,
+  rootKeyboard,
+} from '../menu/menu';
 import { author, greeting } from '../constants/text/text';
 import { Commands } from '../menu/commands/commands';
 import { sendHHVacancies } from '../utils/utils';
@@ -40,7 +44,12 @@ bot.command('settings', async (ctx: Context) => {
     }
   }
 });
-
+bot.command('unsubscribe', async (ctx: Context) => {
+  await ctx.reply('<b>Отписаться от какого-либо события:</b>', {
+    parse_mode: 'HTML',
+    reply_markup: inlineUnsubscribeKeyboard,
+  });
+});
 bot.on(':text', async (ctx: Context) => {
   switch (ctx.msg?.text) {
     case 'Направление':
