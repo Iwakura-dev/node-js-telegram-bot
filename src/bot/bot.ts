@@ -44,6 +44,14 @@ bot.command('settings', async (ctx: Context) => {
     }
   }
 });
+bot.command('help', async (ctx: Context) => {
+  await ctx.reply(
+    '<b>Если вам необходима помощь, обратитесь по данному адрессу: kozhemyakokirill@gmail.com</b>',
+    {
+      parse_mode: 'HTML',
+    },
+  );
+});
 bot.command('unsubscribe', async (ctx: Context) => {
   await ctx.reply('<b>Отписаться от какого-либо события:</b>', {
     parse_mode: 'HTML',
