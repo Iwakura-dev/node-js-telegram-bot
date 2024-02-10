@@ -37,8 +37,6 @@ export async function sendHHVacancies(
           console.error('Error', error);
         }
       }
-    } else {
-      await ctx.reply('Error');
     }
   }
 }
