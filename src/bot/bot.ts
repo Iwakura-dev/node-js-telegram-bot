@@ -15,7 +15,7 @@ const bot = new Bot<Context>(token);
 
 let userSubscriptions: Record<number, string[]> = {};
 let lastRequestTime: Record<string, number> = {};
-
+let coolDown = 10 * 60 * 1000;
 bot.command('start', async (ctx: Context) => {
   await ctx.reply(greeting, {
     reply_markup: rootKeyboard,
@@ -78,18 +78,15 @@ bot.callbackQuery('subscribe_frontend', async (ctx) => {
   if (!userSubscriptions[userId].includes('Front-End')) {
     userSubscriptions[userId].push('Front-End');
     await ctx.answerCallbackQuery({
-      text: 'Вы подписались на вакансии по направлению "Front-end',
+      text: 'Вы подписались на вакансии по направлению "Front-end"',
     });
-    await sendHHVacancies(ctx, 'Front-End');
+    await sendHHVacancies(ctx, 'Front-End', userSubscriptions);
     setInterval(async () => {
-      if (
-        Date.now() - (lastRequestTime[userId.toString()] ?? 0) >
-        10 * 60 * 1000
-      ) {
+      if (Date.now() - (lastRequestTime[userId.toString()] ?? 0) > coolDown) {
         lastRequestTime[userId.toString()] = Date.now();
-        await sendHHVacancies(ctx, 'Front-End');
+        await sendHHVacancies(ctx, 'Front-End', userSubscriptions);
       }
-    }, 600000); // 10 minutes
+    }, coolDown); // 10 minutes cooldown
   } else {
     await ctx.answerCallbackQuery({
       text: 'Вы уже подписались на данное событие!',
@@ -105,18 +102,15 @@ bot.callbackQuery('subscribe_backend', async (ctx) => {
     if (!userSubscriptions[userId].includes('Back-End')) {
       userSubscriptions[userId].push('Back-End');
       await ctx.answerCallbackQuery({
-        text: 'Вы подписались на вакансии по направлению "Back-end',
+        text: 'Вы подписались на вакансии по направлению "Back-end"',
       });
-      await sendHHVacancies(ctx, 'Back-End');
+      await sendHHVacancies(ctx, 'Back-End', userSubscriptions);
       setInterval(async () => {
-        if (
-          Date.now() - (lastRequestTime[userId.toString()] ?? 0) >
-          10 * 60 * 1000
-        ) {
+        if (Date.now() - (lastRequestTime[userId.toString()] ?? 0) > coolDown) {
           lastRequestTime[userId.toString()] = Date.now();
-          await sendHHVacancies(ctx, 'Back-End');
+          await sendHHVacancies(ctx, 'Back-End', userSubscriptions);
         }
-      }, 600000); // 10 minutes
+      }, coolDown); // 10 minutes cooldown
     } else {
       await ctx.answerCallbackQuery({
         text: 'Вы уже подписались на данное событие!',
@@ -124,6 +118,37 @@ bot.callbackQuery('subscribe_backend', async (ctx) => {
     }
   }
 });
+
+bot.callbackQuery(
+  ['unsubscribe_frontend', 'unsubscribe_backend'],
+  async (ctx) => {
+    if (ctx.chat?.id) {
+      const userId = ctx.chat.id;
+      if (
+        (userSubscriptions[userId] &&
+          userSubscriptions[userId]?.includes('Front-End')) ||
+        userSubscriptions[userId]?.includes('Back-End')
+      ) {
+        const direction = userSubscriptions[userId].includes('Front-End')
+          ? 'Front-End'
+          : 'Back-End';
+        const index = userSubscriptions[userId]?.indexOf(
+          'Front-End' ? 'Front-End' : 'Back-End',
+        );
+        if (index >= -1) {
+          userSubscriptions[userId].splice(index, 1);
+          await ctx.answerCallbackQuery({
+            text: `Вы отписались от вакансии с направлением: ${direction}`,
+          });
+        }
+      } else {
+        await ctx.answerCallbackQuery({
+          text: 'Вы не подписаны на данное направление!',
+        });
+      }
+    }
+  },
+);
 bot.catch((err) => {
   const ctx = err.ctx;
   console.error(`Error while handling input ${ctx.update.update_id}`);
