@@ -10,6 +10,7 @@ import { Commands } from '../menu/commands/commands';
 import { sendHHVacancies } from '../utils/utils';
 
 const token = process.env.API_TOKEN_TELEGRAM_BOT ?? '';
+const buyMeCoffee = process.env.URL_BY_ME_A_COFFEE ?? '';
 
 const bot = new Bot<Context>(token);
 
@@ -65,6 +66,14 @@ bot.on(':text', async (ctx: Context) => {
         'Выберите из списка направления в котором вы заинтересованы!',
         {
           reply_markup: inlineKeyboardVacancy,
+        },
+      );
+      break;
+    case 'Донат':
+      await ctx.reply(
+        `<b>Если ты хочешь поддержать автора данного проекта, автор будет рад угоститься кружечкой горячего кофе</b>\n\nBuy Me A Coffee - ${buyMeCoffee}`,
+        {
+          parse_mode: 'HTML',
         },
       );
       break;
