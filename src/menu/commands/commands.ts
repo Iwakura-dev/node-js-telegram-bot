@@ -7,12 +7,16 @@ export const Commands = async (ctx: Context) => {
       description: 'Помощь с ботом',
     },
     {
-      command: 'settings',
-      description: 'Настройки профиля',
+      command: 'donate',
+      description: 'Поддержать автора проекта',
     },
     {
       command: 'unsubscribe',
       description: 'Отписаться от направления',
+    },
+    {
+      command: 'settings',
+      description: 'Настройки профиля',
     },
   ]);
 };

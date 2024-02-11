@@ -71,11 +71,6 @@ bot.on(':text', async (ctx: Context) => {
     case 'Об авторе':
       await ctx.reply(author);
       break;
-    case 'Назад':
-      await ctx.reply('Выходим на главное меню', {
-        reply_markup: rootKeyboard,
-      });
-      break;
   }
 });
 bot.callbackQuery('subscribe_frontend', async (ctx) => {
