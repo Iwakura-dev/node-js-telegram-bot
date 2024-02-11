@@ -8,9 +8,7 @@ import {
 import { author, greeting } from '../constants/text/text';
 import { Commands } from '../menu/commands/commands';
 import { sendHHVacancies } from '../utils/utils';
-
-const token = process.env.API_TOKEN_TELEGRAM_BOT ?? '';
-const buyMeCoffee = process.env.URL_BY_ME_A_COFFEE ?? '';
+import { buyMeCoffee, token } from '../constants/constants';
 
 const bot = new Bot<Context>(token);
 
