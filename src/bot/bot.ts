@@ -80,52 +80,34 @@ bot.on(':text', async (ctx: Context) => {
       break;
   }
 });
-bot.callbackQuery('subscribe_frontend', async (ctx) => {
+
+bot.callbackQuery(['subscribe_frontend', 'subscribe_backend'], async (ctx) => {
   const userId = ctx.from.id;
+
   if (!userSubscriptions[userId]) {
     userSubscriptions[userId] = [];
   }
-  if (!userSubscriptions[userId].includes('Front-End')) {
-    userSubscriptions[userId].push('Front-End');
+
+  const direction =
+    ctx.match === 'subscribe_frontend' ? 'Front-End' : 'Back-End';
+
+  if (!userSubscriptions[userId].includes(direction)) {
+    userSubscriptions[userId].push(direction);
     await ctx.answerCallbackQuery({
-      text: 'Вы подписались на вакансии по направлению "Front-end"',
+      text: `Вы подписались на вакансии по направлению "${direction}"`,
     });
-    await sendHHVacancies(ctx, 'Front-End', userSubscriptions);
+    await sendHHVacancies(ctx, direction, userSubscriptions);
+
     setInterval(async () => {
       if (Date.now() - (lastRequestTime[userId.toString()] ?? 0) > coolDown) {
         lastRequestTime[userId.toString()] = Date.now();
-        await sendHHVacancies(ctx, 'Front-End', userSubscriptions);
+        await sendHHVacancies(ctx, direction, userSubscriptions);
       }
-    }, coolDown); // 10 minutes cooldown
+    }, coolDown);
   } else {
     await ctx.answerCallbackQuery({
       text: 'Вы уже подписались на данное событие!',
     });
-  }
-});
-bot.callbackQuery('subscribe_backend', async (ctx) => {
-  if (ctx.chat?.id) {
-    const userId = ctx.chat.id;
-    if (!userSubscriptions[userId]) {
-      userSubscriptions[userId] = [];
-    }
-    if (!userSubscriptions[userId].includes('Back-End')) {
-      userSubscriptions[userId].push('Back-End');
-      await ctx.answerCallbackQuery({
-        text: 'Вы подписались на вакансии по направлению "Back-end"',
-      });
-      await sendHHVacancies(ctx, 'Back-End', userSubscriptions);
-      setInterval(async () => {
-        if (Date.now() - (lastRequestTime[userId.toString()] ?? 0) > coolDown) {
-          lastRequestTime[userId.toString()] = Date.now();
-          await sendHHVacancies(ctx, 'Back-End', userSubscriptions);
-        }
-      }, coolDown); // 10 minutes cooldown
-    } else {
-      await ctx.answerCallbackQuery({
-        text: 'Вы уже подписались на данное событие!',
-      });
-    }
   }
 });
 
