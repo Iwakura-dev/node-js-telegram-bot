@@ -5,7 +5,7 @@ import {
   inlineUnsubscribeKeyboard,
   rootKeyboard,
 } from '../menu/menu';
-import { author, greeting } from '../constants/text/text';
+import { author, greeting, help } from '../constants/text/text';
 import { Commands } from '../menu/commands/commands';
 import { sendHHVacancies } from '../utils/utils';
 import { buyMeCoffee, token } from '../constants/constants';
@@ -44,12 +44,9 @@ bot.command('settings', async (ctx: Context) => {
   }
 });
 bot.command('help', async (ctx: Context) => {
-  await ctx.reply(
-    '<b>Если вам необходима помощь, обратитесь по данному адрессу: kozhemyakokirill@gmail.com</b>',
-    {
-      parse_mode: 'HTML',
-    },
-  );
+  await ctx.reply(help, {
+    parse_mode: 'HTML',
+  });
 });
 bot.command('unsubscribe', async (ctx: Context) => {
   await ctx.reply('<b>Отписаться от какого-либо события:</b>', {
@@ -61,9 +58,10 @@ bot.on(':text', async (ctx: Context) => {
   switch (ctx.msg?.text) {
     case 'Направление':
       await ctx.reply(
-        'Выберите из списка направления в котором вы заинтересованы!',
+        '<b>Выберите из списка направления в котором вы заинтересованы!</b>',
         {
           reply_markup: inlineKeyboardVacancy,
+          parse_mode: 'HTML',
         },
       );
       break;
@@ -94,7 +92,7 @@ bot.callbackQuery(['subscribe_frontend', 'subscribe_backend'], async (ctx) => {
   if (!userSubscriptions[userId].includes(direction)) {
     userSubscriptions[userId].push(direction);
     await ctx.answerCallbackQuery({
-      text: `Вы подписались на вакансии по направлению "${direction}"`,
+      text: `Вы подписались на событие по направлению "${direction}"`,
     });
     await sendHHVacancies(ctx, direction, userSubscriptions);
 
@@ -106,7 +104,7 @@ bot.callbackQuery(['subscribe_frontend', 'subscribe_backend'], async (ctx) => {
     }, coolDown);
   } else {
     await ctx.answerCallbackQuery({
-      text: 'Вы уже подписались на данное событие!',
+      text: 'Вы уже подписаны на данное событие!',
     });
   }
 });
