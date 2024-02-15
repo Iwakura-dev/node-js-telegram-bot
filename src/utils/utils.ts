@@ -1,4 +1,4 @@
-import { Context, HttpError } from 'grammy';
+import { Context } from 'grammy';
 import { IVacanciesResponse } from '../types/types';
 
 export async function sendHHVacancies(

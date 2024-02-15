@@ -44,15 +44,16 @@ bot.command('settings', async (ctx: Context) => {
     }
   }
 });
-bot.command('help', async (ctx: Context) => {
-  await ctx.reply(help, {
-    parse_mode: 'HTML',
-  });
-});
+
 bot.command('unsubscribe', async (ctx: Context) => {
   await ctx.reply('<b>Отписаться от какого-либо события:</b>', {
     parse_mode: 'HTML',
     reply_markup: inlineUnsubscribeKeyboard,
+  });
+});
+bot.command('help', async (ctx: Context) => {
+  await ctx.reply(help, {
+    parse_mode: 'HTML',
   });
 });
 bot.on(':text', async (ctx: Context) => {
