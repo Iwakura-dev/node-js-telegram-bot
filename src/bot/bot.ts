@@ -15,6 +15,7 @@ const bot = new Bot<Context>(token);
 let userSubscriptions: Record<number, string[]> = {};
 let lastRequestTime: Record<string, number> = {};
 let coolDown = 10 * 60 * 1000;
+
 bot.command('start', async (ctx: Context) => {
   await ctx.reply(greeting, {
     reply_markup: rootKeyboard,
@@ -139,6 +140,7 @@ bot.callbackQuery(
     }
   },
 );
+
 bot.catch((err) => {
   const ctx = err.ctx;
   console.error(`Error while handling input ${ctx.update.update_id}`);
