@@ -46,10 +46,22 @@ bot.command('settings', async (ctx: Context) => {
 });
 
 bot.command('unsubscribe', async (ctx: Context) => {
-  await ctx.reply('<b>Отписаться от какого-либо события:</b>', {
-    parse_mode: 'HTML',
-    reply_markup: inlineUnsubscribeKeyboard,
-  });
+  if (ctx.from?.id) {
+    const userId = ctx.from?.id;
+    if (!userSubscriptions[userId]) {
+      await ctx.reply(
+        '<b>Для начала подпишетесь на направление, чтобы в будущем отписаться от него!</b>',
+        {
+          parse_mode: 'HTML',
+        },
+      );
+    } else {
+      await ctx.reply('<b>Отписаться от какого-либо события:</b>', {
+        parse_mode: 'HTML',
+        reply_markup: inlineUnsubscribeKeyboard,
+      });
+    }
+  }
 });
 bot.command('help', async (ctx: Context) => {
   await ctx.reply(help, {
