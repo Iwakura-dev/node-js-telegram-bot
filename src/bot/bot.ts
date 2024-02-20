@@ -1,20 +1,21 @@
 import 'dotenv/config';
 import { Bot, Context, GrammyError, HttpError } from 'grammy';
+import { buyMeCoffee, ko_fi, token } from '../constants/constants';
+import { author, greeting, help } from '../constants/text/text';
+import { Commands } from '../menu/commands/commands';
 import {
   inlineKeyboardVacancy,
   inlineUnsubscribeKeyboard,
   rootKeyboard,
 } from '../menu/menu';
-import { author, greeting, help } from '../constants/text/text';
-import { Commands } from '../menu/commands/commands';
 import { sendHHVacancies } from '../utils/utils';
-import { buyMeCoffee, ko_fi, token } from '../constants/constants';
 
 const bot = new Bot<Context>(token);
 
 let userSubscriptions: Record<number, string[]> = {};
 let lastRequestTime: Record<string, number> = {};
 let coolDown = 10 * 60 * 1000;
+let direction: any;
 
 bot.command('start', async (ctx: Context) => {
   await ctx.reply(greeting, {
@@ -93,54 +94,68 @@ bot.on(':text', async (ctx: Context) => {
   }
 });
 
-bot.callbackQuery(['subscribe_frontend', 'subscribe_backend'], async (ctx) => {
-  const userId = ctx.from.id;
+bot.callbackQuery(
+  ['subscribe_frontend', 'subscribe_backend', 'subscribe_fullstack'],
+  async (ctx) => {
+    const userId = ctx.from.id;
 
-  if (!userSubscriptions[userId]) {
-    userSubscriptions[userId] = [];
-  }
+    if (!userSubscriptions[userId]) {
+      userSubscriptions[userId] = [];
+    }
+    switch (ctx.match) {
+      case 'subscribe_frontend':
+        direction = 'Front-End';
+        break;
+      case 'subscribe_backend':
+        direction = 'Back-End';
+        break;
+      case 'subscribe_fullstack':
+        direction = 'Full-Stack';
+        break;
+      default:
+        direction = '';
+    }
 
-  const direction =
-    ctx.match === 'subscribe_frontend' ? 'Front-End' : 'Back-End';
+    if (!userSubscriptions[userId].includes(direction)) {
+      userSubscriptions[userId].push(direction);
+      await ctx.answerCallbackQuery({
+        text: `Вы подписались на событие по направлению "${direction}"`,
+      });
+      await sendHHVacancies(ctx, direction, userSubscriptions);
 
-  if (!userSubscriptions[userId].includes(direction)) {
-    userSubscriptions[userId].push(direction);
-    await ctx.answerCallbackQuery({
-      text: `Вы подписались на событие по направлению "${direction}"`,
-    });
-    await sendHHVacancies(ctx, direction, userSubscriptions);
-
-    setInterval(async () => {
-      if (Date.now() - (lastRequestTime[userId.toString()] ?? 0) > coolDown) {
-        lastRequestTime[userId.toString()] = Date.now();
-        await sendHHVacancies(ctx, direction, userSubscriptions);
-      }
-    }, coolDown);
-  } else {
-    await ctx.answerCallbackQuery({
-      text: 'Вы уже подписаны на данное событие!',
-    });
-  }
-});
+      setInterval(async () => {
+        if (Date.now() - (lastRequestTime[userId.toString()] ?? 0) > coolDown) {
+          lastRequestTime[userId.toString()] = Date.now();
+          await sendHHVacancies(ctx, direction, userSubscriptions);
+        }
+      }, coolDown);
+    } else {
+      await ctx.answerCallbackQuery({
+        text: 'Вы уже подписаны на данное событие!',
+      });
+    }
+  },
+);
 
 bot.callbackQuery(
-  ['unsubscribe_frontend', 'unsubscribe_backend'],
+  ['unsubscribe_frontend', 'unsubscribe_backend', 'unsubscribe_fullstack'],
   async (ctx) => {
     if (ctx.chat?.id) {
       const userId = ctx.chat.id;
+      const userSubscription = userSubscriptions[userId];
+      const directions = ['Front-End', 'Back-End', 'Full-Stack'];
+
       if (
-        (userSubscriptions[userId] &&
-          userSubscriptions[userId]?.includes('Front-End')) ||
-        userSubscriptions[userId]?.includes('Back-End')
+        userSubscription &&
+        directions.some((direction) => userSubscription.includes(direction))
       ) {
-        const direction = userSubscriptions[userId].includes('Front-End')
-          ? 'Front-End'
-          : 'Back-End';
-        const index = userSubscriptions[userId]?.indexOf(
-          'Front-End' ? 'Front-End' : 'Back-End',
+        const direction = directions.find((direction) =>
+          userSubscription.includes(direction),
         );
-        if (index >= -1) {
-          userSubscriptions[userId].splice(index, 1);
+        const index = userSubscription.indexOf(direction as string);
+
+        if (index !== -1) {
+          userSubscription.splice(index, 1);
           await ctx.answerCallbackQuery({
             text: `Вы отписались от вакансии с направлением: ${direction}`,
           });
