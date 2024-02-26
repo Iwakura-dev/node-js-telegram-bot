@@ -4,9 +4,9 @@
   "description": "this is bot for searching jobs with it",
   "main": "build/bot.js",
   "scripts": {
-    "compile": "tsc --project tsconfig.json",
-    "clean": "rmdir /s /q .\\build",
-    "start": "nodemon build/bot/bot.js"
+    "compile:prod": "tsc --project tsconfig.json",
+    "prod": "nodemon build/bot/bot.js",
+    "clean": "rmdir /s /q .\\build"
   },
   "keywords": [
     "tg",
