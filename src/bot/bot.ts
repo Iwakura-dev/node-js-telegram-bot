@@ -10,7 +10,7 @@ import {
 } from '../menu/menu';
 import { sendHHVacancies } from '../utils/utils';
 
-const bot = new Bot<Context>(token);
+const bot = new Bot<Context>(token as string) ?? 'Error parse token!';
 
 let userSubscriptions: Record<number, string[]> = {};
 let lastRequestTime: Record<string, number> = {};
