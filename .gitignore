@@ -1,9 +1,6 @@
 # Node dependencies
 node_modules
 
-# Enviroment Variables
-.env
-
 # logs
 npm-debug.log*
 yarn-debug.log*
