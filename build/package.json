@@ -2,11 +2,9 @@
   "name": "telegram-bot",
   "version": "1.0.0",
   "description": "this is bot for searching jobs with it",
-  "main": "build/bot.js",
+  "main": "index.js",
   "scripts": {
-    "compile": "tsc --project tsconfig.json",
-    "start:prod": "node build/bot/bot.js",
-    "start:dev": "nodemon build/bot/bot.js",
+    "start:prod": "node bot/bot.js",
     "clean": "rmdir /s /q .\\build"
   },
   "keywords": [
