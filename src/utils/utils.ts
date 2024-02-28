@@ -1,5 +1,5 @@
 import { Context } from 'grammy';
-import { IVacanciesResponse } from '../types/types';
+import type { IVacanciesResponse } from '../types/types';
 
 export async function sendHHVacancies(
   ctx: Context,
@@ -21,7 +21,7 @@ export async function sendHHVacancies(
       });
       try {
         const response = await fetch(`https://api.hh.ru/vacancies?${params}`);
-        const data: IVacanciesResponse = await response.json();
+        const data = (await response.json()) as IVacanciesResponse;
         let message = '';
         data.items.forEach((item, index) => {
           const salary = item.salary

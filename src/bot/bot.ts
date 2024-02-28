@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Bot, Context, GrammyError, HttpError } from 'grammy';
-import { buyMeCoffee, ko_fi, token } from '../constants/constants';
+import { constants } from '../constants/constants';
 import { author, greeting, help } from '../constants/text/text';
 import { Commands } from '../menu/commands/commands';
 import {
@@ -10,7 +10,8 @@ import {
 } from '../menu/menu';
 import { sendHHVacancies } from '../utils/utils';
 
-const bot = new Bot<Context>(token as string) ?? 'Error parse token!';
+export const bot =
+  new Bot<Context>(constants.token as string) ?? 'Error parse token!';
 
 let userSubscriptions: Record<number, string[]> = {};
 let lastRequestTime: Record<string, number> = {};
@@ -82,7 +83,7 @@ bot.on(':text', async (ctx: Context) => {
       break;
     case 'Донат':
       await ctx.reply(
-        `<b>Если ты хочешь поддержать автора данного проекта, автор будет рад угоститься кружечкой горячего кофе</b>\n\nBuy Me A Coffee - ${buyMeCoffee}\n\nKo-Fi - ${ko_fi}`,
+        `<b>Если ты хочешь поддержать автора данного проекта, автор будет рад угоститься кружечкой горячего кофе</b>\n\nBuy Me A Coffee - ${constants.buyMeCoffe}\n\nKo-Fi - ${constants.ko_fi}`,
         {
           parse_mode: 'HTML',
         },
