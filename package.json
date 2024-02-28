@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "this is bot for searching jobs with it",
   "main": "src/bot/bot.ts",
-  "type": "module",
   "scripts": {
     "compile": "tsc --project tsconfig.json",
     "start:prod": "node build/bot/bot.js",
