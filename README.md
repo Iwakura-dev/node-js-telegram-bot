@@ -15,15 +15,18 @@ Also there is no limitation in the number of subscriptions, the user can subscri
 
 ## Roadmap folders
 
-.
+<pre>
 ├── build  
 ├── node_modules  
 ├── src  
  ├── bot
 ├── constants
+  ├── text
 ├── menu
+  ├── commands
 ├── types
 └── utils
+</pre>
 
 ## Structured project
 
