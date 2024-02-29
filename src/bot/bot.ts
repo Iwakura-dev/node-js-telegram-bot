@@ -11,7 +11,17 @@ import {
 import { sendHHVacancies } from '../utils/utils';
 
 export const bot =
-  new Bot<Context>(constants.token as string) ?? 'Error parse token!';
+  new Bot<Context>(constants.token as string, {
+    botInfo: {
+      id: 6871508134,
+      is_bot: true,
+      first_name: 'Career Compass',
+      username: 'work_seaarch_it_bot',
+      can_join_groups: true,
+      can_read_all_group_messages: false,
+      supports_inline_queries: true,
+    },
+  }) ?? 'Error parse token!';
 
 let userSubscriptions: Record<number, string[]> = {};
 let lastRequestTime: Record<string, number> = {};
