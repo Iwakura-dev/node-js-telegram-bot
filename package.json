@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "compile": "tsc-esm --project tsconfig.json",
+    "postinstall": "tsc-esm",
     "start:prod": "node build/bot/bot.js",
     "start:dev": "nodemon build/bot/bot.js",
     "server": "node build/app.js",
